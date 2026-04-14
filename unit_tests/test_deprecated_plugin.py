@@ -1,7 +1,7 @@
 import unittest
 from nose.config import Config
 from nose.plugins.deprecated import Deprecated, DeprecatedTest
-from nose.result import TextTestResult, _TextTestResult
+from nose.result import TextTestResult, TextTestResult
 from StringIO import StringIO
 from optparse import OptionParser
 try:
@@ -17,11 +17,11 @@ class TestDeprecatedPlugin(unittest.TestCase):
         sk = Deprecated()
         sk.addOptions
         sk.configure
-        sk.prepareTestResult        
+        sk.prepareTestResult
 
     def test_prepare_patches_result(self):
         stream = _WritelnDecorator(StringIO())
-        res = _TextTestResult(stream, 0, 1)
+        res = TextTestResult(stream, 0, 1)
         sk = Deprecated()
         sk.prepareTestResult(res)
         res._orig_addError
@@ -61,13 +61,13 @@ class TestDeprecatedPlugin(unittest.TestCase):
         class NoPatch(unittest.TestResult):
             def __init__(self):
                 self.errorClasses = {}
-                
+
         res = NoPatch()
         sk = Deprecated()
         sk.prepareTestResult(res)
         assert not hasattr(res, '_orig_addError'), \
                "Deprecated patched a result class it didn't need to patch"
-        
+
 
     def test_deprecated_output(self):
         class TC(unittest.TestCase):
@@ -75,14 +75,14 @@ class TestDeprecatedPlugin(unittest.TestCase):
                 raise DeprecatedTest('deprecated me')
 
         stream = _WritelnDecorator(StringIO())
-        res = _TextTestResult(stream, 0, 1)
+        res = TextTestResult(stream, 0, 1)
         sk = Deprecated()
         sk.prepareTestResult(res)
 
         test = TC('test')
         test(res)
         assert not res.errors, "Deprecated was not caught: %s" % res.errors
-        assert res.deprecated            
+        assert res.deprecated
 
         res.printErrors()
         out = stream.getvalue()
@@ -95,15 +95,15 @@ class TestDeprecatedPlugin(unittest.TestCase):
         class TC(unittest.TestCase):
             def test(self):
                 raise DeprecatedTest('deprecated me too')
-        
+
         stream = _WritelnDecorator(StringIO())
-        res = _TextTestResult(stream, 0, verbosity=2)
+        res = TextTestResult(stream, 0, verbosity=2)
         sk = Deprecated()
         sk.prepareTestResult(res)
         test = TC('test')
         test(res)
         assert not res.errors, "Deprecated was not caught: %s" % res.errors
-        assert res.deprecated            
+        assert res.deprecated
 
         res.printErrors()
         out = stream.getvalue()
@@ -125,7 +125,7 @@ class TestDeprecatedPlugin(unittest.TestCase):
         sk.configure(options, Config())
         assert not sk.enabled, \
                "Deprecated was not disabled by noDeprecated option"
-        
+
 
 if __name__ == '__main__':
     unittest.main()
