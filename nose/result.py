@@ -41,7 +41,7 @@ class TextTestResult(TextTestResult):
         if config is None:
             config = Config()
         self.config = config
-        TextTestResult.__init__(self, stream, descriptions, verbosity)
+        super(TextTestResult, self).__init__(stream, descriptions, verbosity)
 
     def addSkip(self, test, reason):
         # 2.7 skip compat
@@ -100,7 +100,7 @@ class TextTestResult(TextTestResult):
     def printErrors(self):
         """Overrides to print all errorClasses errors as well.
         """
-        TextTestResult.printErrors(self)
+        super(TextTestResult, self).printErrors()
         for cls in list(self.errorClasses.keys()):
             storage, label, isfail = self.errorClasses[cls]
             if isfail:
@@ -184,10 +184,10 @@ class TextTestResult(TextTestResult):
             return str(err[1])
         # 2.3/2.4 -- 2.4 passes test, 2.3 does not
         try:
-            return TextTestResult._exc_info_to_string(self, err, test)
+            return super(TextTestResult, self)._exc_info_to_string(err, test)
         except TypeError:
             # 2.3: does not take test arg
-            return TextTestResult._exc_info_to_string(self, err)
+            return super(TextTestResult, self)._exc_info_to_string(err)
 
 
 def ln(*arg, **kw):
