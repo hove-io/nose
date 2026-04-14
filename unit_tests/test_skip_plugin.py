@@ -3,7 +3,7 @@ from nose.config import Config
 from nose.plugins.skip import Skip, SkipTest
 from nose.result import TextTestResult
 from StringIO import StringIO
-from nose.result import _TextTestResult
+from nose.result import TextTestResult
 from optparse import OptionParser
 try:
     # 2.7+
@@ -22,7 +22,7 @@ class TestSkipPlugin(unittest.TestCase):
 
     def test_prepare_patches_result(self):
         stream = _WritelnDecorator(StringIO())
-        res = _TextTestResult(stream, 0, 1)
+        res = TextTestResult(stream, 0, 1)
         sk = Skip()
         sk.prepareTestResult(res)
         res._orig_addError
@@ -74,7 +74,7 @@ class TestSkipPlugin(unittest.TestCase):
                 raise SkipTest('skip me')
 
         stream = _WritelnDecorator(StringIO())
-        res = _TextTestResult(stream, 0, 1)
+        res = TextTestResult(stream, 0, 1)
         sk = Skip()
         sk.prepareTestResult(res)
 
@@ -97,7 +97,7 @@ class TestSkipPlugin(unittest.TestCase):
                 raise SkipTest('skip me too')
 
         stream = _WritelnDecorator(StringIO())
-        res = _TextTestResult(stream, 0, verbosity=2)
+        res = TextTestResult(stream, 0, verbosity=2)
         sk = Skip()
         sk.prepareTestResult(res)
         test = TC('test')
@@ -124,7 +124,7 @@ class TestSkipPlugin(unittest.TestCase):
         options, args = parser.parse_args(['--no-skip'])
         sk.configure(options, Config())
         assert not sk.enabled, "Skip was not disabled by noSkip option"
-        
+
 
 if __name__ == '__main__':
     unittest.main()

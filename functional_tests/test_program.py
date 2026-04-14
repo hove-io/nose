@@ -5,16 +5,16 @@ from nose import SkipTest
 from nose.core import TestProgram
 from nose.config import Config
 from nose.plugins.manager import DefaultPluginManager
-from nose.result import _TextTestResult
+from nose.result import TextTestResult
 
 here = os.path.dirname(__file__)
 support = os.path.join(here, 'support')
 
 class TestRunner(unittest.TextTestRunner):
     def _makeResult(self):
-        self.result = _TextTestResult(
+        self.result = TextTestResult(
             self.stream, self.descriptions, self.verbosity)
-        return self.result 
+        return self.result
 
 # Note that all of these tests use a set config to avoid the loading
 # of plugins or settings from .noserc.
@@ -61,7 +61,7 @@ class TestTestProgram(unittest.TestCase):
         assert res.wasSuccessful()
         assert not res.errors
         assert not res.failures
-        
+
     def test_run_support_package3(self):
         """Collect and run tests in functional_tests/support/package3
 
@@ -136,7 +136,7 @@ class TestTestProgram(unittest.TestCase):
         import warnings
         warnings.filterwarnings('ignore', category=DeprecationWarning,
                                 module='test')
-        
+
         stream = StringIO()
         runner = TestRunner(stream=stream, verbosity=2)
 
@@ -183,7 +183,7 @@ class TestTestProgram(unittest.TestCase):
         assert res.wasSuccessful()
         assert not res.errors
         assert not res.failures
-        
+
 
 if __name__ == '__main__':
     #import logging

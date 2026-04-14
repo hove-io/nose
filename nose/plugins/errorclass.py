@@ -59,8 +59,8 @@ through the internal process of nose so you can see what happens at
 each step.
 
     >>> plugin = TodoError()
-    >>> from nose.result import _TextTestResult
-    >>> result = _TextTestResult(stream=buf, descriptions=0, verbosity=2)
+    >>> from nose.result import TextTestResult
+    >>> result = TextTestResult(stream=buf, descriptions=0, verbosity=2)
     >>> plugin.prepareTestResult(result)
 
 Now run the test. TODO is printed.

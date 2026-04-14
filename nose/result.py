@@ -2,7 +2,7 @@
 Test Result
 -----------
 
-Provides a TextTestResult that extends unittest's _TextTestResult to
+Provides a TextTestResult that extends unittest's TextTestResult to
 provide support for error classes (such as the builtin skip and
 deprecated classes), and hooks for plugins to take over or extend
 reporting.
@@ -11,9 +11,9 @@ reporting.
 import logging
 try:
     # 2.7+
-    from unittest.runner import _TextTestResult
+    from unittest.runner import TextTestResult
 except ImportError:
-    from unittest import _TextTestResult
+    from unittest import TextTestResult
 from nose.config import Config
 from nose.util import isclass, ln as _ln # backwards compat
 
@@ -28,7 +28,7 @@ def _exception_detail(exc):
         return '<unprintable %s object>' % type(exc).__name__
 
 
-class TextTestResult(_TextTestResult):
+class TextTestResult(TextTestResult):
     """Text test result that extends unittest's default test result
     support for a configurable set of errorClasses (eg, Skip,
     Deprecated, TODO) that extend the errors/failures/success triad.
@@ -41,7 +41,7 @@ class TextTestResult(_TextTestResult):
         if config is None:
             config = Config()
         self.config = config
-        _TextTestResult.__init__(self, stream, descriptions, verbosity)
+        super(TextTestResult, self).__init__(stream, descriptions, verbosity)
 
     def addSkip(self, test, reason):
         # 2.7 skip compat
@@ -100,7 +100,7 @@ class TextTestResult(_TextTestResult):
     def printErrors(self):
         """Overrides to print all errorClasses errors as well.
         """
-        _TextTestResult.printErrors(self)
+        super(TextTestResult, self).printErrors()
         for cls in list(self.errorClasses.keys()):
             storage, label, isfail = self.errorClasses[cls]
             if isfail:
@@ -184,10 +184,10 @@ class TextTestResult(_TextTestResult):
             return str(err[1])
         # 2.3/2.4 -- 2.4 passes test, 2.3 does not
         try:
-            return _TextTestResult._exc_info_to_string(self, err, test)
+            return super(TextTestResult, self)._exc_info_to_string(err, test)
         except TypeError:
             # 2.3: does not take test arg
-            return _TextTestResult._exc_info_to_string(self, err)
+            return super(TextTestResult, self)._exc_info_to_string(err)
 
 
 def ln(*arg, **kw):
@@ -196,5 +196,3 @@ def ln(*arg, **kw):
          "from nose.result in a future release. Please update your imports ",
          DeprecationWarning)
     return _ln(*arg, **kw)
-
-
